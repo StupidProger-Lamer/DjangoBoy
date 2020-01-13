@@ -1,10 +1,20 @@
+html {
+	color: silver;
+	font-family: sans-serif;
+	background: #466368;
+ 	background: linear-gradient(to right bottom, #648880, #293f50);
+}
 header h1 {
 	font-size: 40pt;
+	font-family: sans-serif;
 	text-transform: uppercase;
 	text-align: center;
 	background: url("bg.jpg") left / auto 100% no-repeat;
+	border-radius: 10px;
+	color: white;
 }
 nav {
+	color: grey;
 	font-size: 16pt;
 	width: 150px;
 	float: left;
@@ -12,7 +22,14 @@ nav {
 nav a {
 	display: block;
 	margin: 10px 0px;
+	color: white;
 }
 section {
-	margin-left: 170px;
+	margin-left: 200px;
+}
+h2 {
+	color: maroon;
+}
+.ark {
+	color: white;
 }
