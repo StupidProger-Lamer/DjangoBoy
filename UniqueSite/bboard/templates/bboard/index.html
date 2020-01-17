@@ -9,5 +9,16 @@
 	<p><a href="{% url 'update' pk=bb.pk %}">Исправить   </a><a href="{% url 'delete' pk=bb.pk %}">Удалить</a></p>
 	<p>{{bb.published|date:"d.m.Y H:i:s"}}</p>
 </div>
+<div>
+	{% if page.has_previous %}
+	<a href="?page={{ page.previous_page_number }}">&lt;</a>
+	&nbsp; &nbsp; | &nbsp; &nbsp;
+	{% endif %}
+	Часть №{{ page.number }} из {{ page.paginator.num_pages }}
+	{% if page.has_next %}
+	&nbsp; &nbsp; | &nbsp; &nbsp;
+	<a href="?page={{ page.next_page_number }}">&gt;</a>
+	{% endif %}
+</div>
 {% endfor %}
 {% endblock %}

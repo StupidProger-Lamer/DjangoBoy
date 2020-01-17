@@ -3,6 +3,7 @@ from django.template import loader, context, Template
 from django.views.generic import CreateView, ArchiveIndexView, TemplateView, DetailView, DeleteView, ListView, UpdateView
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect
+from django.core.paginator import Paginator
 
 from .models import Bb, Rubric
 from .forms import BbForm
@@ -90,3 +91,15 @@ class BbIndexView(ArchiveIndexView):
 		context = super().get_context_data(*args, **kwargs)
 		context['rubrics'] = Rubric.objects.all()
 		return context
+
+def index(request):
+	rubrics = Rubric.objects.all()
+	bbs = Bb.objects.all()
+	paginator = Paginator(bbs, 2)
+	if 'page' in request.GET:
+		page_num = request.GET['page']
+	else:
+		page_num = 1
+	page = paginator.get_page(page_num)
+	context = {'rubrics': rubrics, 'page': page, 'bbs': page.object_list}
+	return render(request, 'bboard/index.html', context)
