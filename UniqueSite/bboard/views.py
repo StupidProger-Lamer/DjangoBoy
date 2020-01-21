@@ -1,9 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.template import loader, context, Template
 from django.views.generic import CreateView, ArchiveIndexView, TemplateView, DetailView, DeleteView, ListView, UpdateView
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect
 from django.core.paginator import Paginator
+from django.forms import modelformset_factory
+from django.forms.formsets import ORDERING_FIELD_NAME
 
 from .models import Bb, Rubric
 from .forms import BbForm
@@ -13,6 +15,22 @@ def index(request):
 	rubrics = Rubric.objects.all()
 	context = {'bbs': bbs, 'rubrics': rubrics}
 	return render(request, 'bboard/index.html', context)
+
+def rubrics(request):
+	RubricFormSet = modelformset_factory(Rubric, fields=('name',), can_order=True, can_delete=True)
+	if request.method == 'POST':
+		formset = RubricFormSet(request.POST)
+		if formset.is_valid():
+			for form in formset:
+				if form.cleaned_data:
+					rubric = form.save(commit=False)
+					rubric.order = form.cleaned_data[ORDERING_FIELD_NAME]
+					rubric.save()
+			return redirect('bboard:index')
+	else:
+		formset = RubricFormSet()
+	context = {'formset': formset}
+	return render(request, 'bboard/rubrics.html', context)
 
 def by_rubric(request, rubric_id):
 	bbs = Bb.objects.filter(rubric = rubric_id)
